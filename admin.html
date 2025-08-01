@@ -1,0 +1,69 @@
+<h2>Admin Dashboard</h2>
+<div id="userList"></div>
+<script>
+  async function loadUsers() {
+    const res = await fetch("http://localhost:5000/admin/users");
+    const users = await res.json();
+    const list = users.map(u => `
+      <div>
+        ${u.name} (${u.email}) - Balance: $${u.balance}
+        <form onsubmit="event.preventDefault(); updateBalance('${u.email}', this.balance.value)">
+          <input name="balance" placeholder="New balance">
+          <button>Update</button>
+        </form>
+      </div>
+    `).join("");
+    document.getElementById("userList").innerHTML = list;
+  }
+  loadUsers();
+
+  async function updateBalance(email, balance) {
+    await fetch("http://localhost:5000/admin/update-balance", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ email, balance })
+    });
+    alert("Balance updated!");
+    loadUsers();
+  }
+</script>
+if (localStorage.getItem("admin") !== "admin-token") {
+  location.href = "admin-login.html";
+}
+</html>
+<!DOCTYPE html>
+<section>
+  <h3>Filter by Referral Code</h3>
+  <input type="text" id="filterCode" placeholder="Enter Referral Code">
+  <button onclick="filterUsers()">Filter</button>
+  <button onclick="loadUsers()">Reset</button>
+</section>
+<!DOCTYPE html>
+<html lang="en">
+  async function loadUsers(filterCode = "") {
+  const res = await fetch("http://localhost:5000/admin/users");
+  const users = await res.json();
+
+  const filtered = filterCode
+    ? users.filter(u => u.referredBy === filterCode)
+    : users;
+
+  const list = filtered.map(u => `
+    <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+      <strong>${u.name}</strong> (${u.email})<br/>
+      Balance: $${u.balance}<br/>
+      Referral Code: <strong>${u.referralCode || 'N/A'}</strong><br/>
+      Referred By: ${u.referredBy || 'N/A'}
+      <form onsubmit="event.preventDefault(); updateBalance('${u.email}', this.balance.value)">
+        <input name="balance" type="number" placeholder="New balance" required>
+        <button>Update Balance</button>
+      </form>
+    </div>
+  `).join("");
+  document.getElementById("userList").innerHTML = list;
+}
+
+function filterUsers() {
+  const code = document.getElementById("filterCode").value.trim();
+  loadUsers(code);
+}

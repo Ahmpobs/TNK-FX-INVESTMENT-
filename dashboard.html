@@ -1,0 +1,9 @@
+<h2>Welcome to TNK FX Dashboard</h2>
+<div id="balance">Loading...</div>
+<div id="referral">Your referral link: <span id="refLink"></span></div>
+<script>
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) location.href = 'login.html';
+  document.getElementById("balance").textContent = "Balance: $" + user.balance;
+  document.getElementById("refLink").textContent = `http://localhost:5000/register.html?ref=${user.referralCode}`;
+</script>

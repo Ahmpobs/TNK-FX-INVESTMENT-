@@ -1,0 +1,20 @@
+<form id="registerForm">
+  <input type="text" placeholder="Name" name="name" required>
+  <input type="email" placeholder="Email" name="email" required>
+  <input type="password" placeholder="Password" name="password" required>
+  <input type="text" placeholder="Referral Code (optional)" name="referredBy">
+  <button type="submit">Register</button>
+</form>
+<script>
+  document.getElementById('registerForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    const res = await fetch('http://localhost:5000/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    alert(json.message);
+  };
+</script>

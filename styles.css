@@ -1,0 +1,27 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  background: #f4f4f4;
+}
+form, div, section {
+  margin: 10px 0;
+}
+nav a {
+  margin-right: 10px;
+}
+header, footer {
+  background: #222;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+main {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+nav {
+  background: #333;
+  color: white;
+  padding: 10px;
+}
